@@ -42,3 +42,8 @@
 
 #Fast Fading Traces
 src/channel/propagation-model/FastFadingRealization/*
+
+#outputs of scripts
+
+RUN/scheduling-performance/TRACE
+RUN/scheduling-performance/OUT
