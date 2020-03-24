@@ -1,9 +1,0 @@
-
-- run simulations:
-	sh run.sh
-
-- elaborate simulations' output
-	sh postsim.sh
-
-- generate graphs using the makegraphs.m file (using Matlab)
-- Note: I just imported this from LTESim (2020-03-02 @USP by MJT)
