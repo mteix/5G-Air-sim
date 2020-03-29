@@ -47,3 +47,4 @@
 
 RUN/scheduling-performance/TRACE
 RUN/scheduling-performance/OUT
+RUN/NB-IoT/TRACE
