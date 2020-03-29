@@ -154,7 +154,7 @@ RadioBearer::UpdateAverageTransmissionRate ()
 
   if (Simulator::Init()->Now() > GetLastUpdate())
     {
-      // double rate = (GetTransmittedBytes () * 8)/(Simulator::Init()->Now() - GetLastUpdate());
+      double rate = (GetTransmittedBytes () * 8)/(Simulator::Init()->Now() - GetLastUpdate());
 
       // double beta = 0.2;
 
