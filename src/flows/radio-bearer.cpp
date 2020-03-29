@@ -191,8 +191,8 @@ RadioBearer::UpdateAverageTransmissionRate ()
   m_averageTransmissionRate = xhatminus + K*(rate - xhatminus);
   P0 = (1-K)*Pminus;
 
-/*// 02-Dec-2018 by MJT
-=======
+// 02-Dec-2018 by MJT
+//=======
 /*
 // 02-Dec-2018 by MJT
 >>>>>>> a79c470f55087ff7451e20e1f3debb882628d817
