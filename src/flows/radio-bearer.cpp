@@ -154,19 +154,84 @@ RadioBearer::UpdateAverageTransmissionRate ()
 
   if (Simulator::Init()->Now() > GetLastUpdate())
     {
-      double rate = (GetTransmittedBytes () * 8)/(Simulator::Init()->Now() - GetLastUpdate());
+      // double rate = (GetTransmittedBytes () * 8)/(Simulator::Init()->Now() - GetLastUpdate());
 
-      double beta = 0.2;
+      // double beta = 0.2;
 
-      m_averageTransmissionRate =
-        ((1 - beta) * m_averageTransmissionRate) + (beta * rate);
+      // m_averageTransmissionRate =
+      //   ((1 - beta) * m_averageTransmissionRate) + (beta * rate);
 
-      if (m_averageTransmissionRate < 1)
-        {
-          m_averageTransmissionRate = 1;
-        }
+      // if (m_averageTransmissionRate < 1)
+      //   {
+      //     m_averageTransmissionRate = 1;
+      //   }
 
 
+
+
+
+  // 28-Nov-2018 by MJT 
+  //#####################################
+  //########## KALMAN FILTER ############
+  //#####################################
+
+
+  // 1. rate is the observation (z)
+  // 2. estimates for initial P0 and m_averageTransmissionRate (xhat) must 
+  // be provided
+
+
+  //Kalman estimates
+
+  xhatminus = m_averageTransmissionRate;
+  Pminus = P0 + Q;
+
+  //Kalman updates
+  K = Pminus/(Pminus + R);
+  m_averageTransmissionRate = xhatminus + K*(rate - xhatminus);
+  P0 = (1-K)*Pminus;
+
+/*// 02-Dec-2018 by MJT
+=======
+/*
+// 02-Dec-2018 by MJT
+>>>>>>> a79c470f55087ff7451e20e1f3debb882628d817
+//##########################
+//  KALMAN SUB-FILTER
+//##########################
+
+q1 = m_averageTransmissionRate;
+eta2 = 4*(rate - xhatminus)*(rate - xhatminus)*R + 2*R*R;
+// declared in beginning of class sigmaQ2 = pow(10,-32); // 2x 16 digit precision
+zk = (rate - xhatminus)*(rate - xhatminus)+R-P0;
+kq = P1Q/(P1Q+eta2);
+q0 = (q1+kq)*(zk-q1);
+P0Q = P1Q*(1-kq);
+q1 = q0;
+P1Q = P0Q + sigmaQ2;
+
+if(q1>0)
+  Q = q1;
+else 
+  Q = 0;
+
+
+#ifdef MY_DEBUG
+  std::cerr << "\n ------> Sub-Filter parameters \n " <<
+
+  " q1 " << q1 << " eta2 " << eta2 <<
+  "   kq " << kq << "  q0 " << q0 <<
+  "   P0Q " << P0Q << "  P1Q \n" << P1Q 
+
+  << std::endl;
+#endif
+
+
+//##########################
+// END KALMAN SUB-FILTER
+//##########################
+
+*/
 DEBUG_LOG_START_1(SIM_ENV_SCHEDULER_DEBUG)
       cout << "UPDATE AVG RATE, bearer " << GetApplication ()->GetApplicationID () <<
                 "\n\t tx byte " << GetTransmittedBytes () <<
