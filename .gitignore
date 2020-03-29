@@ -51,5 +51,4 @@ RUN/NB-IoT/TRACE
 
 #temporary text files
 *.txt 
-*.out
 *.dat
