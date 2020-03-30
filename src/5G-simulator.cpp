@@ -56,6 +56,7 @@
 #include "scenarios/test-mbsfn.h"
 #include "scenarios/test-unicast.h"
 #include "scenarios/nb-cell-test.h"
+#include "scenarios/my-nb-cell.h"
 
 #include "utility/help.h"
 #include <iostream>
@@ -173,6 +174,10 @@ main (int argc, char *argv[])
       if (strcmp(argv[1], "nbCellTest")==0)
         {
           nbCellTest (argc, argv);
+        }
+        if (strcmp(argv[1], "mynbCell")==0)
+        {
+          mynbCell (argc, argv);
         }
     }
   else
