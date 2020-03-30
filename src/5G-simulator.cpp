@@ -121,7 +121,7 @@ main (int argc, char *argv[])
         }
       if (strcmp(argv[1], "nbCell")==0)
         {
-          nbCell (argc, argv);
+          mynbCell (argc, argv);
         }
       if (strcmp(argv[1], "test-tri-sector")==0)
         {
@@ -177,7 +177,8 @@ main (int argc, char *argv[])
         }
         if (strcmp(argv[1], "mynbCell")==0)
         {
-          mynbCell (argc, argv);
+          //nbCell (argc, argv);
+          std::cout << "DO NOTHING! CHANGE THIS and nbCell" <<  std::endl;
         }
     }
   else
