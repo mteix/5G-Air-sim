@@ -1,7 +1,7 @@
 set -x
 set -e
 
-_COUNT=6
+_COUNT=8
 _NB_SEEDS=10
 
 #using UL schedule 1 and changing DL SCHEDULES and delay

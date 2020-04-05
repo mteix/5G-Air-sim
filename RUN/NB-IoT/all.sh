@@ -1,0 +1,14 @@
+./11runIoT.sh &
+./2runIoT.sh &
+./5runIoT.sh &
+./77runIoT.sh &
+./8runIoT.sh &
+./1runIoT.sh &
+./33runIoT.sh &
+./66runIoT.sh &
+./7runIoT.sh &
+./22runIoT.sh &
+./3runIoT.sh &
+./55runIoT.sh &
+./6runIoT.sh &
+./88runIoT.sh &
