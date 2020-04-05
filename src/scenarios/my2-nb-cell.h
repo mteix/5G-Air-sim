@@ -89,7 +89,7 @@ static void mynbCell (int argc, char *argv[])
   int totPreambleTx = atoi(argv[12]);
   int nbCE = atoi(argv[13]);
   int schedDL = atoi(argv[14]);    //new argument
-  double maxDelay = atof(argv[15]);   // new argument
+  int maxDelay = atoi(argv[15]);   // new argument
   std::map<double, int> ceProb;
   std::map<int, int> maxPreambleTx;
   std::map<int, int> preambleRep;
@@ -213,10 +213,8 @@ DEBUG_LOG_END
     }
 
 // SET SCHEDULING ALLOCATION SCHEME
-int dummy_erase;
   GNodeB::DLSchedulerType downlink_scheduler_type;
   switch (schedDL)
-    
     {
     case 1:
       downlink_scheduler_type = GNodeB::DLScheduler_TYPE_PROPORTIONAL_FAIR;
@@ -254,7 +252,7 @@ int dummy_erase;
       downlink_scheduler_type = GNodeB::DLScheduler_TYPE_PROPORTIONAL_FAIR;
       break;
     }
-  std::cin >> dummy_erase;
+
   //Create GNodeB
   GNodeB* gnb = new GNodeB (1, cell, 0, 0);
   gnb->SetRandomAccessType(m_GnbRandomAccessType);
