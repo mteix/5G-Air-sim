@@ -413,65 +413,16 @@ DEBUG_LOG_END
 
 //------------------------------------------------------------------------------------------------------------- create qos parameters????
 
- if (downlink_scheduler_type == GNodeB::DLScheduler_TYPE_FLS)
-            {
-              QoSForFLS *qos = new QoSForFLS ();
-              qos->SetMaxDelay (maxDelay);
-              if (maxDelay == 0.1)
-                {
-                  cout << "Target Delay = 0.1 s, M = 9" << endl;
-                  qos->SetNbOfCoefficients (9);
-                }
-              else if (maxDelay == 0.08)
-                {
-                  cout << "Target Delay = 0.08 s, M = 7" << endl;
-                  qos->SetNbOfCoefficients (7);
-                }
-              else if (maxDelay == 0.06)
-                {
-                  cout << "Target Delay = 0.06 s, M = 5" << endl;
-                  qos->SetNbOfCoefficients (5);
-                }
-              else if (maxDelay == 0.04)
-                {
-                  cout << "Target Delay = 0.04 s, M = 3" << endl;
-                  qos->SetNbOfCoefficients (3);
-                }
-              else
-                {
-                  cout << "ERROR: target delay is not available"<< endl;
-                  return;
-                }
-
-              CBRApplication[cbrApplication].SetQoSParameters (qos);
-            }
-          else if (downlink_scheduler_type == GNodeB::DLScheduler_TYPE_EXP)
-            {
-              QoSForEXP *qos = new QoSForEXP ();
-              qos->SetMaxDelay (maxDelay);
-              CBRApplication[cbrApplication].SetQoSParameters (qos);
-            }
-          else if (downlink_scheduler_type == GNodeB::DLScheduler_TYPE_MLWDF)
-            {
-              QoSForM_LWDF *qos = new QoSForM_LWDF ();
-              qos->SetMaxDelay (maxDelay);
-              CBRApplication[cbrApplication].SetQoSParameters (qos);
-            }
-          else
-            {
-              QoSParameters *qos = new QoSParameters ();
-              qos->SetMaxDelay (maxDelay);
-              CBRApplication[cbrApplication].SetQoSParameters (qos);
-            }
  
-      // // ===============================================================
-      // // This is the original implementation
-      // // ===============================================================
-      // QoSParameters *qosParameters = new QoSParameters ();
-      // qosParameters->SetMaxDelay (maxDelay);
-      // CBRApplication[cbrApplication].SetQoSParameters (qosParameters);
-      // // ===============================================================
-      // // ===============================================================
+ 
+      // ===============================================================
+      // This is the original implementation
+      // ===============================================================
+      QoSParameters *qosParameters = new QoSParameters ();
+      qosParameters->SetMaxDelay (maxDelay);
+      CBRApplication[cbrApplication].SetQoSParameters (qosParameters);
+      // ===============================================================
+      // ===============================================================
 
       //create classifier parameters
       ClassifierParameters *cp = new ClassifierParameters (ue->GetIDNetworkNode(),
