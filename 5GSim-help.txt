@@ -31,6 +31,9 @@ run examples:
 	 ./5G-air-simulator  nbCell  sched_NB-IoT  time  r  nUe bw nC spa  tones  cbrT cbrS aMax nCl  [p0]  [pAtt]  [pRep]  [rWind]  [nP]  [period]  [o]  [boW]  (seed)
 		 --> ./5G-air-simulator nbCell 0 150 1000 1200 5 1 15 1 60 256 4 1 1 3 1 12 48 320 8 256 1
 
+./5G-air-simulator  mynbCell  sched_NB-IoT  time  r  nUe bw nC spa  tones  cbrT cbrS aMax nCl schedDL delay [p0]  [pAtt]  [pRep]  [rWind]  [nP]  [period]  [o]  [boW]  (seed)
+		 ./5G-air-simulator mynbCell 0 50 1000 100 5 1 15 1 60 256 4 1 3 0.04 1 3 1 12 48 320 8 256 1
+
 
 
 	 legend:

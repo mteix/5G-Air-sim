@@ -18,6 +18,7 @@
  *
  * Author: Telematics Lab <telematics-dev@poliba.it>
  * Author: Sergio Martiradonna <sergio.martiradonna@poliba.it>
+ * Adapted by: Marcio Teixeira m963616@dac.unicamp.br
  */
 
 #include "../channel/RadioChannel.h"
@@ -65,6 +66,12 @@
 #include <cstring>
 #include <math.h>
 
+/*
+---------------------------------------------------------------- 
+Included options for DL scheduling and frame structure selection
+By MJT, on 2020-03-30 @Lima 
+----------------------------------------------------------------
+*/
 
 static void mynbCell (int argc, char *argv[])
 {
@@ -81,6 +88,8 @@ static void mynbCell (int argc, char *argv[])
   int CBR_size = atoi(argv[11]);
   int totPreambleTx = atoi(argv[12]);
   int nbCE = atoi(argv[13]);
+  int schedDL = atoi(argv[14]);    //new argument
+  double maxDelay = atof(argv[15]);   // new argument
   std::map<double, int> ceProb;
   std::map<int, int> maxPreambleTx;
   std::map<int, int> preambleRep;
@@ -89,12 +98,6 @@ static void mynbCell (int argc, char *argv[])
   std::map<int, int> rachPeriod;
   std::map<int, int> rachOffset;
   std::map<int, int> boWindow;
-
-//defining delay manually here (TEMP)
-
-
-
-double maxDelay = 0.04;
 
   for (int i=0; i<nbCE; i++)
   {
@@ -113,9 +116,9 @@ double maxDelay = 0.04;
     boWindow.insert(std::make_pair(i, atoi(argv[14+(nbCE*7)+i])));
   }
   int seed;
-  if (argc==15+(nbCE*8))
+  if (argc==17+(nbCE*8))
     {
-      seed = atoi(argv[14+(nbCE*8)]);
+      seed = atoi(argv[16+(nbCE*8)]);
     }
   else
     {
@@ -146,6 +149,7 @@ double maxDelay = 0.04;
       srand (seed);
     }
   else
+
     {
       srand (time(NULL));
     }
@@ -155,7 +159,9 @@ double maxDelay = 0.04;
   cout << "Simulation with SEED = " << seed << endl;
   cout << "Duration: " << duration << " flow: " << flow_duration << endl;
 
-  // SET FRAME STRUCTURE
+  // SET FRAME STRUCTURE DL
+  // By MJT on 2020-03-29 @Lima
+  // (unchanged)
   frameManager->SetFrameStructure(FrameManager::FRAME_STRUCTURE_FDD);
 
 
@@ -188,6 +194,7 @@ DEBUG_LOG_START_1(SIM_ENV_SCHEDULER_DEBUG_NB)
   spectrum->Print();
 DEBUG_LOG_END
 
+
   GNodeB::ULSchedulerType uplink_scheduler_type;
   switch (schedUL)
     {
@@ -205,6 +212,49 @@ DEBUG_LOG_END
       break;
     }
 
+// SET SCHEDULING ALLOCATION SCHEME
+int dummy_erase;
+  GNodeB::DLSchedulerType downlink_scheduler_type;
+  switch (schedDL)
+    
+    {
+    case 1:
+      downlink_scheduler_type = GNodeB::DLScheduler_TYPE_PROPORTIONAL_FAIR;
+      cout << "Scheduler PF "<< endl;
+      break;
+    case 2:
+      downlink_scheduler_type = GNodeB::DLScheduler_TYPE_MLWDF;
+      cout << "Scheduler MLWDF "<< endl;
+      break;
+    case 3:
+      downlink_scheduler_type = GNodeB::DLScheduler_TYPE_EXP;
+      cout << "Scheduler EXP "<< endl;
+      break;
+    case 4:
+      downlink_scheduler_type = GNodeB::DLScheduler_TYPE_FLS;
+      cout << "Scheduler FLS "<< endl;
+      break;
+    case 5:
+      downlink_scheduler_type = GNodeB::DLScheduler_EXP_RULE;
+      cout << "Scheduler EXP_RULE "<< endl;
+      break;
+    case 6:
+      downlink_scheduler_type = GNodeB::DLScheduler_LOG_RULE;
+      cout << "Scheduler LOG RULE "<< endl;
+      break;
+    case 7:
+      downlink_scheduler_type = GNodeB::DLScheduler_TYPE_MAXIMUM_THROUGHPUT;
+      cout << "Scheduler MT "<< endl;
+      break;
+    case 8:
+      downlink_scheduler_type = GNodeB::DLScheduler_TYPE_ROUND_ROBIN;
+      cout << "Scheduler RR "<< endl;
+      break;
+    default:
+      downlink_scheduler_type = GNodeB::DLScheduler_TYPE_PROPORTIONAL_FAIR;
+      break;
+    }
+  std::cin >> dummy_erase;
   //Create GNodeB
   GNodeB* gnb = new GNodeB (1, cell, 0, 0);
   gnb->SetRandomAccessType(m_GnbRandomAccessType);
@@ -212,9 +262,7 @@ DEBUG_LOG_END
   gnb->GetPhy ()->SetUlChannel (ulCh);
   gnb->GetPhy ()->SetBandwidthManager (spectrum);
   ulCh->AddDevice (gnb);
-    // changing manually (for now ) the DL scheduler
-  //gnb->SetDLScheduler (GNodeB::DLScheduler_TYPE_PROPORTIONAL_FAIR);
-  gnb->SetDLScheduler (GNodeB::DLScheduler_TYPE_EXP);
+  gnb->SetDLScheduler (downlink_scheduler_type);
   gnb->SetULScheduler(uplink_scheduler_type);
 
   networkManager->GetGNodeBContainer ()->push_back (gnb);
@@ -282,7 +330,7 @@ DEBUG_LOG_END
       posY=distance / sqrt(2) * sign;
 
       UserEquipment* ue = new UserEquipment (idUE,
-                                             posX, posY, 3, speedDirection,
+                                             posX, posY, 0, speedDirection,
                                              cell,
                                              gnb,
                                              0, //handover false!
@@ -348,15 +396,14 @@ DEBUG_LOG_START_1(SIM_ENV_SCHEDULER_DEBUG_LOG)
            << endl;
 DEBUG_LOG_END
 
-      //CREATE DOWNLINK APPLICATION FOR THIS UE
-
+      //CREATE UPLINK APPLICATION FOR THIS UE
       double start_time = .001 + timeDis(gen);
       double duration_time = flow_duration - 0.001;
 
       // *** cbr application
       // create application
-      CBRApplication[cbrApplication].SetSource (gnb);
-      CBRApplication[cbrApplication].SetDestination (ue);
+      CBRApplication[cbrApplication].SetSource (ue);
+      CBRApplication[cbrApplication].SetDestination (gnb);
       CBRApplication[cbrApplication].SetApplicationID (applicationID);
       CBRApplication[cbrApplication].SetStartTime(start_time);
       CBRApplication[cbrApplication].SetStopTime(duration_time);
@@ -366,32 +413,26 @@ DEBUG_LOG_END
 
 //------------------------------------------------------------------------------------------------------------- create qos parameters????
 
+ 
+ 
+      // ===============================================================
+      // This is the original implementation
+      // ===============================================================
       QoSParameters *qosParameters = new QoSParameters ();
-      
-      //replacing flowduration for maXDelay
       qosParameters->SetMaxDelay (maxDelay);
       CBRApplication[cbrApplication].SetQoSParameters (qosParameters);
-
+      // ===============================================================
+      // ===============================================================
 
       //create classifier parameters
-      ClassifierParameters *cp = new ClassifierParameters (gnb->GetIDNetworkNode(),
-                                                           ue->GetIDNetworkNode(),
+      ClassifierParameters *cp = new ClassifierParameters (ue->GetIDNetworkNode(),
+                                                           gnb->GetIDNetworkNode(),
                                                            0,
                                                            destinationPort,
                                                            TransportProtocol::TRANSPORT_PROTOCOL_TYPE_UDP);
       CBRApplication[cbrApplication].SetClassifierParameters (cp);
 
       cout << "CREATED CBR APPLICATION, ID " << applicationID << endl;
-
-    //=====================================
-// channel realizatiion
-
-// define the channel realization
-    ChannelRealization* c_ul = new ChannelRealization (ue, gnb, ChannelRealization::CHANNEL_MODEL_MACROCELL_URBAN);
-      c_ul->disableFastFading();
-      gnb->GetPhy ()->GetUlChannel ()->GetPropagationLossModel ()->AddChannelRealization (c_ul);
-//=====================================
-// channel realizatiion
 
       //update counter
       //destinationPort++;
