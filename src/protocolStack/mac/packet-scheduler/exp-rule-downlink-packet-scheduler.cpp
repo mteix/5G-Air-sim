@@ -110,8 +110,9 @@ DEBUG_LOG_END
   double metric;
 
   if ((bearer->GetApplication ()->GetApplicationType () == Application::APPLICATION_TYPE_INFINITE_BUFFER)
-      ||
-      (bearer->GetApplication ()->GetApplicationType () == Application::APPLICATION_TYPE_CBR))
+  //    ||
+  //    (bearer->GetApplication ()->GetApplicationType () == Application::APPLICATION_TYPE_CBR)
+      )
     {
       metric = (spectralEfficiency * 180000.)
                /

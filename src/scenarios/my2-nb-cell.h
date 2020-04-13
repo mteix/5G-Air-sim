@@ -68,7 +68,7 @@
 
 static void my2nbCell (int argc, char *argv[])
 {
-  int schedUL = atoi(argv[2]); 
+  int sched = atoi(argv[2]); 
   double dur = atoi(argv[3]);
   double radius = atof(argv[4]);
   //cout<< "Radius = " << radius << endl;
@@ -185,23 +185,96 @@ DEBUG_LOG_END
 
   GNodeB::ULSchedulerType uplink_scheduler_type;
 
-  //USING other schedulers here
-  
-  switch (schedUL)
+  // USING other schedulers here
+  // all the others that can be used with the KF
+  // 
+
+  switch (sched)
     {
-    case 0:
-      uplink_scheduler_type = GNodeB::ULScheduler_TYPE_NB_IOT_FIFO;
-      cout << "Scheduler NB FIFO "<< endl;
-      break;
     case 1:
-      uplink_scheduler_type = GNodeB::ULScheduler_TYPE_NB_IOT_ROUNDROBIN;
-      cout << "Scheduler NB RR "<< endl;
+      uplink_scheduler_type = GNodeB::DLScheduler_TYPE_PROPORTIONAL_FAIR;
+      cout << "Scheduler PF "<< endl;
+      break;
+    case 2:
+      uplink_scheduler_type = GNodeB::DLScheduler_TYPE_MLWDF;
+      cout << "Scheduler MLWDF "<< endl;
+      break;
+    case 3:
+      uplink_scheduler_type = GNodeB::DLScheduler_TYPE_EXP;
+      cout << "Scheduler EXP "<< endl;
+      break;
+    case 4:
+      uplink_scheduler_type = GNodeB::DLScheduler_TYPE_FLS;
+      cout << "Scheduler FLS "<< endl;
+      break;
+    case 5:
+      uplink_scheduler_type = GNodeB::DLScheduler_EXP_RULE;
+      cout << "Scheduler EXP_RULE "<< endl;
+      break;
+    case 6:
+      uplink_scheduler_type = GNodeB::DLScheduler_LOG_RULE;
+      cout << "Scheduler LOG RULE "<< endl;
+      break;
+    case 7:
+      uplink_scheduler_type = GNodeB::DLScheduler_TYPE_MAXIMUM_THROUGHPUT;
+      cout << "Scheduler MT "<< endl;
+      break;
+    case 8:
+      uplink_scheduler_type = GNodeB::DLScheduler_TYPE_ROUND_ROBIN;
+      cout << "Scheduler RR "<< endl;
       break;
     default:
-      uplink_scheduler_type = GNodeB::ULScheduler_TYPE_NB_IOT_FIFO;
-      cout << "Scheduler NB FIFO "<< endl;
+      uplink_scheduler_type = GNodeB::DLScheduler_TYPE_PROPORTIONAL_FAIR;
       break;
     }
+
+
+GNodeB::DLSchedulerType downlink_scheduler_type;
+
+  // USING other schedulers here
+  // all the others that can be used with the KF
+  // 
+
+  switch (sched)
+    {
+    case 1:
+      downlink_scheduler_type = GNodeB::DLScheduler_TYPE_PROPORTIONAL_FAIR;
+      cout << "Scheduler PF "<< endl;
+      break;
+    case 2:
+      downlink_scheduler_type = GNodeB::DLScheduler_TYPE_MLWDF;
+      cout << "Scheduler MLWDF "<< endl;
+      break;
+    case 3:
+      downlink_scheduler_type = GNodeB::DLScheduler_TYPE_EXP;
+      cout << "Scheduler EXP "<< endl;
+      break;
+    case 4:
+      downlink_scheduler_type = GNodeB::DLScheduler_TYPE_FLS;
+      cout << "Scheduler FLS "<< endl;
+      break;
+    case 5:
+      downlink_scheduler_type = GNodeB::DLScheduler_EXP_RULE;
+      cout << "Scheduler EXP_RULE "<< endl;
+      break;
+    case 6:
+      downlink_scheduler_type = GNodeB::DLScheduler_LOG_RULE;
+      cout << "Scheduler LOG RULE "<< endl;
+      break;
+    case 7:
+      downlink_scheduler_type = GNodeB::DLScheduler_TYPE_MAXIMUM_THROUGHPUT;
+      cout << "Scheduler MT "<< endl;
+      break;
+    case 8:
+      downlink_scheduler_type = GNodeB::DLScheduler_TYPE_ROUND_ROBIN;
+      cout << "Scheduler RR "<< endl;
+      break;
+    default:
+      downlink_scheduler_type = GNodeB::DLScheduler_TYPE_PROPORTIONAL_FAIR;
+      break;
+    }
+
+
 
   //Create GNodeB
   GNodeB* gnb = new GNodeB (1, cell, 0, 0);
@@ -210,7 +283,7 @@ DEBUG_LOG_END
   gnb->GetPhy ()->SetUlChannel (ulCh);
   gnb->GetPhy ()->SetBandwidthManager (spectrum);
   ulCh->AddDevice (gnb);
-  gnb->SetDLScheduler (GNodeB::DLScheduler_TYPE_PROPORTIONAL_FAIR);
+  gnb->SetDLScheduler (downlink_scheduler_type);
   gnb->SetULScheduler(uplink_scheduler_type);
 
   networkManager->GetGNodeBContainer ()->push_back (gnb);
