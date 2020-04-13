@@ -57,6 +57,7 @@
 #include "scenarios/test-unicast.h"
 #include "scenarios/nb-cell-test.h"
 #include "scenarios/my-nb-cell.h"
+#include "scenarios/my2-nb-cell.h"
 
 #include "utility/help.h"
 #include <iostream>
@@ -175,11 +176,11 @@ main (int argc, char *argv[])
         {
           nbCellTest (argc, argv);
         }
-        if (strcmp(argv[1], "mynbCell")==0)
+        if (strcmp(argv[1], "my2nbCell")==0)
         {
           //nbCell (argc, argv);
-          std::cout << "DO NOTHING! CHANGE THIS and nbCell" <<  std::endl;
-          mynbCell(argc,argv);
+          std::cout << "THIS IS my2nbCell" <<  std::endl;
+          my2nbCell(argc,argv);
         }
     }
   else
