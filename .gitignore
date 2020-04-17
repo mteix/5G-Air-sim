@@ -40,6 +40,10 @@
 # Project executables
 5G-air-simulator
 
+#text files for testing
+
+*.txt 
+
 #Fast Fading Traces
 #src/channel/propagation-model/FastFadingRealization/*
 

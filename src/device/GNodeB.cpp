@@ -47,6 +47,8 @@
 #include "../componentManagers/FrameManager.h"
 #include "../protocolStack/mac/random-access/gnb-random-access.h"
 
+#include "../protocolStack/mac/packet-scheduler/ul-exp-packet-scheduler.h"
+
 GNodeB::GNodeB (int idElement,
                 Cell *cell)
     : GNodeB::GNodeB (idElement,
@@ -507,6 +509,12 @@ GNodeB::SetULScheduler (ULSchedulerType type)
       break;
     case GNodeB::ULScheduler_TYPE_NB_IOT_ROUNDROBIN:
       scheduler = new nbRoundRobinUplinkPacketScheduler (mac);
+      mac->SetUplinkPacketScheduler (scheduler);
+      break;
+
+      case GNodeB::ULScheduler_TYPE_EXP:
+      scheduler = new UL_EXP_PacketScheduler ();
+      scheduler->SetMacEntity (mac);
       mac->SetUplinkPacketScheduler (scheduler);
       break;
 

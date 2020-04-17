@@ -66,6 +66,10 @@
 #include <math.h>
 
 
+/*
+removed the RA type and checking if we manage to get the scheduling right in the uplink
+*/
+
 static void nbCell (int argc, char *argv[])
 {
   int schedUL = atoi(argv[2]); 
@@ -124,10 +128,10 @@ static void nbCell (int argc, char *argv[])
 
   // define simulation times
   double duration = dur; //+ 1;
-  double flow_duration = duration;
+  double flow_duration = 10;
 
-  UeRandomAccess::RandomAccessType m_UeRandomAccessType = UeRandomAccess::RA_TYPE_NB_IOT;
-  GnbRandomAccess::RandomAccessType m_GnbRandomAccessType = GnbRandomAccess::RA_TYPE_NB_IOT;
+  // UeRandomAccess::RandomAccessType m_UeRandomAccessType = UeRandomAccess::RA_TYPE_NB_IOT;
+  // GnbRandomAccess::RandomAccessType m_GnbRandomAccessType = GnbRandomAccess::RA_TYPE_NB_IOT;
 
   // CREATE COMPONENT MANAGER
   Simulator *simulator = Simulator::Init();
@@ -183,45 +187,83 @@ DEBUG_LOG_START_1(SIM_ENV_SCHEDULER_DEBUG_NB)
 DEBUG_LOG_END
 
 
-  GNodeB::ULSchedulerType uplink_scheduler_type;
-  switch (schedUL)
-    {
-    case 0:
-      uplink_scheduler_type = GNodeB::ULScheduler_TYPE_NB_IOT_FIFO;
-      cout << "Scheduler NB FIFO "<< endl;
-      break;
-    case 1:
-      uplink_scheduler_type = GNodeB::ULScheduler_TYPE_NB_IOT_ROUNDROBIN;
-      cout << "Scheduler NB RR "<< endl;
-      break;
-    default:
-      uplink_scheduler_type = GNodeB::ULScheduler_TYPE_NB_IOT_FIFO;
-      cout << "Scheduler NB FIFO "<< endl;
-      break;
-    }
+  // GNodeB::ULSchedulerType uplink_scheduler_type;
+  // switch (schedUL)
+  //   {
+  //   case 0:
+  //     uplink_scheduler_type = GNodeB::ULScheduler_TYPE_NB_IOT_FIFO;
+  //     cout << "Scheduler NB FIFO "<< endl;
+  //     break;
+  //   case 1:
+  //     uplink_scheduler_type = GNodeB::ULScheduler_TYPE_NB_IOT_ROUNDROBIN;
+  //     cout << "Scheduler NB RR "<< endl;
+  //     break;
+  //   default:
+  //     uplink_scheduler_type = GNodeB::ULScheduler_TYPE_NB_IOT_FIFO;
+  //     cout << "Scheduler NB FIFO "<< endl;
+  //     break;
+  //   }
 
   //Create GNodeB
   GNodeB* gnb = new GNodeB (1, cell, 0, 0);
-  gnb->SetRandomAccessType(m_GnbRandomAccessType);
+ // gnb->SetRandomAccessType(m_GnbRandomAccessType);
   gnb->GetPhy ()->SetDlChannel (dlCh);
   gnb->GetPhy ()->SetUlChannel (ulCh);
   gnb->GetPhy ()->SetBandwidthManager (spectrum);
   ulCh->AddDevice (gnb);
-  gnb->SetDLScheduler (GNodeB::DLScheduler_TYPE_PROPORTIONAL_FAIR);
-  gnb->SetULScheduler(uplink_scheduler_type);
+  gnb->SetDLScheduler (GNodeB::DLScheduler_TYPE_EXP);
+  gnb->SetULScheduler (GNodeB::ULScheduler_TYPE_MAXIMUM_THROUGHPUT);
+  //gnb->SetULScheduler(uplink_scheduler_type);
+
+/*
+//create gNBs
+  vector <GNodeB*> *gNBs = new vector <GNodeB*>;
+  for (int i = 0; i < nbCells; i++)
+    {
+      GNodeB* gnb = new GNodeB (i, cells->at (i));
+      gnb->GetPhy ()->SetDlChannel (dlChannels->at (i));
+      gnb->GetPhy ()->SetUlChannel (ulChannels->at (i));
+
+      gnb->SetDLScheduler (downlink_scheduler_type);
+
+      gnb->GetPhy ()->SetBandwidthManager (spectrums.at (i));
+
+      cout << "Created gnb, id " << gnb->GetIDNetworkNode()
+                << ", cell id " << gnb->GetCell ()->GetIdCell ()
+                <<", position: " << gnb->GetMobilityModel ()->GetAbsolutePosition ()->GetCoordinateX ()
+                << " " << gnb->GetMobilityModel ()->GetAbsolutePosition ()->GetCoordinateY ()
+                << ", channels id " << gnb->GetPhy ()->GetDlChannel ()->GetChannelId ()
+                << gnb->GetPhy ()->GetUlChannel ()->GetChannelId ()  << endl;
+
+      spectrums.at (i)->Print ();
+
+
+      ulChannels->at (i)->AddDevice(gnb);
+
+
+      nm->GetGNodeBContainer ()->push_back (gnb);
+      gNBs->push_back (gnb);
+    }
+
+
+
+
+*/
+
+
 
   networkManager->GetGNodeBContainer ()->push_back (gnb);
   cout << "Created gNB - id 1 position (0;0)"<< endl;
 
-  GnbNbIoTRandomAccess* gnbRam = (GnbNbIoTRandomAccess*) gnb->GetMacEntity()->GetRandomAccessManager() ;
+  //GnbNbIoTRandomAccess* gnbRam = (GnbNbIoTRandomAccess*) gnb->GetMacEntity()->GetRandomAccessManager() ;
 
-  gnbRam->SetMaxPreambleTx(maxPreambleTx);
-  gnbRam->SetPreambleRep(preambleRep);
-  gnbRam->SetRarWindow(rarWindow);
-  gnbRam->SetSubcarriers(nbPre);
-  gnbRam->SetResPeriodicity(rachPeriod);
-  gnbRam->SetTimeOffset(rachOffset);
-  gnbRam->SetBackoff(boWindow);
+  // gnbRam->SetMaxPreambleTx(maxPreambleTx);
+  // gnbRam->SetPreambleRep(preambleRep);
+  // gnbRam->SetRarWindow(rarWindow);
+  // gnbRam->SetSubcarriers(nbPre);
+  // gnbRam->SetResPeriodicity(rachPeriod);
+  // gnbRam->SetTimeOffset(rachOffset);
+  // gnbRam->SetBackoff(boWindow);
 
   //Create UEs
   int idUE = 2;
@@ -283,7 +325,7 @@ DEBUG_LOG_END
 
       cout << "Created UE - id " << idUE << " position " << posX << " " << posY << endl;
 
-      ue->SetRandomAccessType(m_UeRandomAccessType);
+    //  ue->SetRandomAccessType(m_UeRandomAccessType);
       ue->GetPhy ()->SetDlChannel (dlCh);
       ue->GetPhy ()->SetUlChannel (ulCh);
 

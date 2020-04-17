@@ -111,7 +111,8 @@ public:
     ULScheduler_TYPE_FME,
     ULScheduler_TYPE_ROUNDROBIN,
     ULScheduler_TYPE_NB_IOT_FIFO,
-    ULScheduler_TYPE_NB_IOT_ROUNDROBIN
+    ULScheduler_TYPE_NB_IOT_ROUNDROBIN,
+    ULScheduler_TYPE_EXP
   };
 
   GNodeB () = default;

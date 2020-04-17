@@ -125,7 +125,7 @@ static void MMC1 (int argc, char *argv[])
 
   // SET SCHEDULING ALLOCATION SCHEME
   GNodeB::DLSchedulerType downlink_scheduler_type;
-  downlink_scheduler_type = GNodeB::DLScheduler_TYPE_MLWDF;
+  downlink_scheduler_type = GNodeB::DLScheduler_TYPE_PROPORTIONAL_FAIR;
   //changed scheduler 
   cout << "Scheduler PF "<< endl;
   

@@ -36,7 +36,7 @@ public:
   // virtual double ComputeSchedulingMetric (RadioBearer *bearer, double spectralEfficiency, int subChannel);
 
 
-  double ComputeSchedulingMetric(double spectralEfficiency);
+  virtual double ComputeSchedulingMetric (UserToSchedule* user, int subchannel);
   void ComputeAW (void);
   double GetAW (void) const;
 
