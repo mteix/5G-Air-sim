@@ -64,12 +64,12 @@ using std::iota;
 
 /* tracing */
 static bool _APP_TRACING_ = true;
-static bool _RLC_TRACING_ = false;
-static bool _MAC_TRACING_ = false;
+static bool _RLC_TRACING_ = true;
+static bool _MAC_TRACING_ = true;
 static bool _PHY_TRACING_ = true;
 
 /* activate uplink */
-static bool UPLINK = false;
+static bool UPLINK = true;
 
 /* tests */
 static bool _TEST_BLER_ = false;

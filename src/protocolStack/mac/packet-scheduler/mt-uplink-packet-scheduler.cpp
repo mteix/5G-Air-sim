@@ -55,6 +55,7 @@ MaximumThroughputUplinkPacketScheduler::ComputeSchedulingMetric (UserToSchedule*
   AMCModule* amc = user->m_userToSchedule->GetProtocolStack()->GetMacEntity()->GetAmcModule();
   double spectralEfficiency = amc->GetSinrFromCQI (channelCondition);
 
+
   metric = spectralEfficiency * 180000;
 
   return metric;

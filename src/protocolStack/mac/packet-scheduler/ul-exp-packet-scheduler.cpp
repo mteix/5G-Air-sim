@@ -34,6 +34,11 @@
 #include "../../../flows/QoS/QoSForEXP.h"
 #include "../../../flows/MacQueue.h"
 
+
+
+#include "../../../core/idealMessages/ideal-control-messages.h"
+#include "../../../flows/QoS/QoSParameters.h"
+
 UL_EXP_PacketScheduler::UL_EXP_PacketScheduler()
 {
   SetMacEntity(nullptr);
@@ -45,29 +50,31 @@ UL_EXP_PacketScheduler::~UL_EXP_PacketScheduler()
   Destroy();
 }
 
-void UL_EXP_PacketScheduler::DoSchedule()
-{
-  DEBUG_LOG_START_1(SIM_ENV_SCHEDULER_DEBUG)
-  cout << "Start UL packet scheduler for node "
-       << GetMacEntity()->GetDevice()->GetIDNetworkNode() << endl;
-  DEBUG_LOG_END
 
-  //UpdateAverageTransmissionRate ();
-  CheckForDLDropPackets();
-  //SelectFlowsToSchedule ();
-  ComputeAW();
+// void UL_EXP_PacketScheduler::DoSchedule()
+// {
+//   DEBUG_LOG_START_1(SIM_ENV_SCHEDULER_DEBUG)
+//   cout << "Start UL packet scheduler for node "
+//        << GetMacEntity()->GetDevice()->GetIDNetworkNode() << endl;
+//   DEBUG_LOG_END
 
-  if (GetFlowsToSchedule()->size() == 0)
-  {
-  }
-  else
-  {
-    RBsAllocation();
-  }
+//   //UpdateAverageTransmissionRate ();
+//   CheckForDLDropPackets();
+//   //SelectFlowsToSchedule ();
+//   ComputeAW();
 
-  StopSchedule();
-  ClearFlowsToSchedule();
-}
+//   if (GetFlowsToSchedule()->size() == 0)
+//   {
+//   }
+//   else
+//   {
+//     RBsAllocation();
+//   }
+
+//   StopSchedule();
+//   ClearFlowsToSchedule();
+// }
+
 
 double
 UL_EXP_PacketScheduler::ComputeSchedulingMetric(UserToSchedule *user, int subchannel)
@@ -82,12 +89,25 @@ UL_EXP_PacketScheduler::ComputeSchedulingMetric(UserToSchedule *user, int subcha
 
   double metric;
 
+  
+
   // QoSForEXP *qos = (QoSForEXP*) bearer->GetQoSParameters ();
 
   // double HOL = bearer->GetHeadOfLinePacketDelay ();
   // double alfa = -log10(qos->GetDropProbability()) / qos->GetMaxDelay ();
   // double avgAW = GetAW ();
   // double AW = alfa * HOL;
+
+  // 2020-04-22: GetAverageTransmissionRate();
+
+  //RadioBearer urser; // declaring the object 
+
+  
+
+  std::cout << " Data To Transmit : " << user->m_dataToTransmit 
+            << " / Data Transmitted:" << user->m_transmittedData << std::endl; 
+
+
 
   double HOL = 0.04;
   double alfa = -log10(0.01) / 0.04;
@@ -118,44 +138,46 @@ UL_EXP_PacketScheduler::ComputeSchedulingMetric(UserToSchedule *user, int subcha
   metric = exp(AW_avgAW /
                (1 + sqrt(GetAW()))) *
            ((spectralEfficiency * 180000.)) /
-            1000;
+            1000000;
 
   return metric;
 }
 
-void UL_EXP_PacketScheduler::ComputeAW()
-{
-  DEBUG_LOG_START_1(SIM_ENV_SCHEDULER_DEBUG)
-  cout << "ComputeAW" << endl;
-  DEBUG_LOG_END
+// void UL_EXP_PacketScheduler::ComputeAW()
+// {
+//   DEBUG_LOG_START_1(SIM_ENV_SCHEDULER_DEBUG)
+//   cout << "ComputeAW" << endl;
+//   DEBUG_LOG_END
 
-  m_aW = 0;
-  int nbFlow = 0;
-  for (auto flow : *GetFlowsToSchedule())
-  {
-    RadioBearer *bearer = flow->GetBearer();
+//   m_aW = 0;
+//   int nbFlow = 0;
+//   for (auto flow : *GetFlowsToSchedule())
+//   {
+   
+//     RadioBearer *bearer = flow->GetBearer();
+    
 
-    if (bearer->HasPackets())
-    {
-      if ((bearer->GetApplication()->GetApplicationType() == Application::APPLICATION_TYPE_TRACE_BASED) ||
-          (bearer->GetApplication()->GetApplicationType() == Application::APPLICATION_TYPE_VOIP))
-      {
-        QoSForEXP *qos = (QoSForEXP *)bearer->GetQoSParameters();
-        double aWi = -(log10(qos->GetDropProbability()) /
-                       qos->GetMaxDelay());
-        double HOL = bearer->GetHeadOfLinePacketDelay();
-        aWi = aWi * HOL;
-        m_aW += aWi;
-        nbFlow++;
-      }
-    }
-  }
+//     if (bearer->HasPackets())
+//     {
+//       if ((bearer->GetApplication()->GetApplicationType() == Application::APPLICATION_TYPE_TRACE_BASED) ||
+//           (bearer->GetApplication()->GetApplicationType() == Application::APPLICATION_TYPE_VOIP))
+//       {
+//         QoSForEXP *qos = (QoSForEXP *)bearer->GetQoSParameters();
+//         double aWi = -(log10(qos->GetDropProbability()) /
+//                        qos->GetMaxDelay());
+//         double HOL = bearer->GetHeadOfLinePacketDelay();
+//         aWi = aWi * HOL;
+//         m_aW += aWi;
+//         nbFlow++;
+//       }
+//     }
+//   }
 
-  m_aW = m_aW / nbFlow;
+//   m_aW = m_aW / nbFlow;
 
-  if (m_aW < 0.000001)
-    m_aW = 0;
-}
+//   if (m_aW < 0.000001)
+//     m_aW = 0;
+// }
 
 double
 UL_EXP_PacketScheduler::GetAW(void) const

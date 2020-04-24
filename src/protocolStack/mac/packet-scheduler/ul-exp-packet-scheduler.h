@@ -23,15 +23,15 @@
 #ifndef UL_EXP_PACKET_SCHEDULER_H_
 #define UL_EXP_PACKET_SCHEDULER_H_
 
-#include "enhanced-uplink-packet-scheduler.h"
+#include "uplink-packet-scheduler.h"
 
-class UL_EXP_PacketScheduler : public EnhancedUplinkPacketScheduler
+class UL_EXP_PacketScheduler : public UplinkPacketScheduler
 {
 public:
   UL_EXP_PacketScheduler();
   virtual ~UL_EXP_PacketScheduler();
 
-  virtual void DoSchedule (void);
+ // virtual void DoSchedule (void);
 
   // virtual double ComputeSchedulingMetric (RadioBearer *bearer, double spectralEfficiency, int subChannel);
 

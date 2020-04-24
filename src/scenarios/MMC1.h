@@ -207,7 +207,7 @@ static void MMC1 (int argc, char *argv[])
   gnb->GetPhy ()->SetBandwidthManager (spectrum);
   ulCh->AddDevice (gnb);
   gnb->SetDLScheduler (downlink_scheduler_type);
-  gnb->SetULScheduler (GNodeB::ULScheduler_TYPE_MAXIMUM_THROUGHPUT);
+  gnb->SetULScheduler (GNodeB::ULScheduler_TYPE_FME);
   networkManager->GetGNodeBContainer ()->push_back (gnb);
 
 
