@@ -73,8 +73,8 @@ static void SingleCellWithInterference (int argc, char *argv[])
     }
 
   // define simulation times
-  double duration = 46;
-  double flow_duration = 40;
+  double duration = 21;
+  double flow_duration = 7;
 
 
   int cluster = 4;

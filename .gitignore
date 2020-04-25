@@ -43,8 +43,9 @@
 #Fast Fading Traces
 #src/channel/propagation-model/FastFadingRealization/*
 
-#outputs of scripts
+#outputs of scripts and garbage files
 
 RUN/scheduling-performance/TRACE
 RUN/scheduling-performance/OUT
 RUN/NB-IoT/TRACE
+*.dat
