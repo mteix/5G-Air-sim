@@ -125,7 +125,7 @@ static void MMC1 (int argc, char *argv[])
 
   // SET SCHEDULING ALLOCATION SCHEME
   GNodeB::DLSchedulerType downlink_scheduler_type;
-  downlink_scheduler_type = GNodeB::DLScheduler_TYPE_PROPORTIONAL_FAIR;
+  downlink_scheduler_type = GNodeB::DLScheduler_TYPE_EXP;
   //changed scheduler 
   cout << "Scheduler PF "<< endl;
   
@@ -207,7 +207,7 @@ static void MMC1 (int argc, char *argv[])
   gnb->GetPhy ()->SetBandwidthManager (spectrum);
   ulCh->AddDevice (gnb);
   gnb->SetDLScheduler (downlink_scheduler_type);
-  gnb->SetULScheduler (GNodeB::ULScheduler_TYPE_FME);
+  gnb->SetULScheduler (GNodeB::ULScheduler_TYPE_MAXIMUM_THROUGHPUT);
   networkManager->GetGNodeBContainer ()->push_back (gnb);
 
 
@@ -380,3 +380,7 @@ static void MMC1 (int argc, char *argv[])
   simulator->Run ();
 
 }
+
+/*
+bearer->GetAverageTransmissionRate();
+*/

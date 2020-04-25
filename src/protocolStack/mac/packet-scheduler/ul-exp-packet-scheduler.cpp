@@ -138,8 +138,8 @@ UL_EXP_PacketScheduler::ComputeSchedulingMetric(UserToSchedule *user, int subcha
   metric = exp(AW_avgAW /
                (1 + sqrt(GetAW()))) *
            ((spectralEfficiency * 180000.)) /
-            1000000;
-
+            11111;
+  std::cout << "---- Metric Exp: " << metric << "---------" << std::endl;
   return metric;
 }
 
@@ -184,3 +184,6 @@ UL_EXP_PacketScheduler::GetAW(void) const
 {
   return m_aW;
 }
+
+
+// THIS IS THE RR 
