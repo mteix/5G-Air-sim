@@ -48,7 +48,6 @@
 #include "scenarios/f5g-uc2.h"
 #include "scenarios/f5g-uc6.h"
 #include "scenarios/MMC1.h"
-//#include "scenarios/MMC2.h"
 #include "scenarios/nb-cell.h"
 #include "scenarios/test-demo1.h"
 #include "scenarios/test-tri-sector.h"
@@ -56,10 +55,8 @@
 #include "scenarios/test-multicast.h"
 #include "scenarios/test-mbsfn.h"
 #include "scenarios/test-unicast.h"
-// #include "scenarios/nb-cell-test.h"
-// #include "scenarios/my-nb-cell.h"
-// #include "scenarios/my2-nb-cell.h"
-
+#include "scenarios/nb-cell-test.h"
+#include "scenarios/learn.h"
 #include "utility/help.h"
 #include <iostream>
 #include <queue>
@@ -94,7 +91,10 @@ main (int argc, char *argv[])
           Simple ();
         }
 
-
+      if (strcmp(argv[1], "Learn")==0)
+        {
+          Learn ();
+        }
 
       /* Run more complex scenarios */
       if (strcmp(argv[1], "SingleCell")==0)
@@ -121,7 +121,6 @@ main (int argc, char *argv[])
         {
           MMC1 (argc, argv);
         }
-        
       if (strcmp(argv[1], "nbCell")==0)
         {
           nbCell (argc, argv);
@@ -174,7 +173,10 @@ main (int argc, char *argv[])
         {
           f5g_demo1 (argc, argv);
         }
-      
+      if (strcmp(argv[1], "nbCellTest")==0)
+        {
+          nbCellTest (argc, argv);
+        }
     }
   else
     {
