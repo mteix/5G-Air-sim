@@ -143,8 +143,9 @@ NetworkManager::CreateUserEquipment (int id,
                                          pos_X, pos_Y, speed, speedDirection,
                                          cell, gnb,
                                          0,
-                                         //Mobility::RANDOM_DIRECTION
-                                         Mobility::CONSTANT_POSITION);
+                                         Mobility::RANDOM_DIRECTION
+                                         //Mobility::CONSTANT_POSITION
+                                         );
 
   ue->GetPhy ()->SetDlChannel (gnb->GetPhy()->GetDlChannel ());
   ue->GetPhy ()->SetDlMcChannel (gnb->GetPhy()->GetDlMcChannel ());

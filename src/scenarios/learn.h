@@ -24,6 +24,7 @@
 #include "../networkTopology/Cell.h"
 #include "../core/eventScheduler/simulator.h"
 #include "../flows/application/InfiniteBuffer.h"
+#include "../flows/application/CBR.h"
 #include "../flows/QoS/QoSParameters.h"
 #include "../componentManagers/FrameManager.h"
 #include "../componentManagers/FlowsManager.h"
@@ -46,6 +47,8 @@
 static void Learn ()
 {
 
+  srand(std::time(NULL));
+  //srand(2435156);
   // CREATE COMPONENT MANAGERS
   Simulator *simulator = Simulator::Init();
   FrameManager *frameManager = FrameManager::Init();
@@ -81,7 +84,7 @@ static void Learn ()
   
   //We will mess around here with some schedulers ...
   gnb->SetDLScheduler (GNodeB::DLScheduler_TYPE_PROPORTIONAL_FAIR);
-
+  gnb->SetULScheduler(GNodeB::ULScheduler_TYPE_ROUNDROBIN);
 
   //Create GW
   Gateway *gw = networkManager->CreateGateway ();
@@ -92,7 +95,7 @@ static void Learn ()
   int posX_ue = 40; //m
   int posY_ue = 0;  //m
   int speed = 3;    //km/h
-  double speeDirection = 0; //meaning???
+  double speeDirection = 100; //meaning???
   int UeTxAntennas = 1;
   int UeRxAntennas = 1;
   UserEquipment* ue = networkManager->CreateUserEquipment (idUe, posX_ue, posY_ue, speed, speeDirection, UeTxAntennas, UeRxAntennas, cell, gnb);
@@ -103,16 +106,51 @@ static void Learn ()
   int srcPort = 0;
   int dstPort = 100;
   double startTime = 0.1; //s
-  double stopTime = 0.12;  //s
-  Application* be = flowsManager->CreateApplication (applicationID,
-                    gw, ue,
-                    srcPort, dstPort, TransportProtocol::TRANSPORT_PROTOCOL_TYPE_UDP,
-                    Application::APPLICATION_TYPE_INFINITE_BUFFER,
-                    qos,
-                    startTime, stopTime);
+  double stopTime = 33.12;  //s
+  // Application* be = flowsManager->CreateApplication (applicationID,
+  //                   gw, ue,
+  //                   srcPort, dstPort, TransportProtocol::TRANSPORT_PROTOCOL_TYPE_UDP,
+  //                   Application::APPLICATION_TYPE_INFINITE_BUFFER,
+  //                   qos,
+  //                   startTime, stopTime);
+
+  int cbrApplication = 0;
+  CBR *CBRApplication;
+  //creating nApps applications
+  int nApps = 10;
+  CBRApplication=new CBR[nApps];
+  for(int i = 0; i < nApps; i++){
+          // create application
+          CBRApplication[cbrApplication].SetSource (gw);
+          CBRApplication[cbrApplication].SetDestination (ue);
+          CBRApplication[cbrApplication].SetApplicationID (applicationID);
+          CBRApplication[cbrApplication].SetStartTime(startTime);
+          CBRApplication[cbrApplication].SetStopTime(stopTime);
+          CBRApplication[cbrApplication].SetInterval (0.04);
+          CBRApplication[cbrApplication].SetSize (500);
+
+          // create qos parameters
+          QoSParameters *qosParameters = new QoSParameters ();
+          qosParameters->SetMaxDelay (0.04);
+
+          CBRApplication[cbrApplication].SetQoSParameters (qosParameters);
 
 
-  simulator->SetStop(3.13);
+          //create classifier parameters
+          ClassifierParameters *cp = new ClassifierParameters (gw->GetIDNetworkNode(),
+              ue->GetIDNetworkNode(),
+              srcPort,
+              dstPort,
+              TransportProtocol::TRANSPORT_PROTOCOL_TYPE_UDP);
+          CBRApplication[cbrApplication].SetClassifierParameters (cp);
+
+          cout << "CREATED CBR APPLICATION, ID " << applicationID << endl;
+          //update counter
+              dstPort++;
+              applicationID++;
+              cbrApplication++;
+}
+  simulator->SetStop(stopTime);
   simulator->Run ();
-
+  cout << "RANDOM = " << rand() << endl;
 }

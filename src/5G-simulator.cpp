@@ -56,7 +56,7 @@
 #include "scenarios/test-mbsfn.h"
 #include "scenarios/test-unicast.h"
 #include "scenarios/nb-cell-test.h"
-
+#include "scenarios/learn.h"
 #include "utility/help.h"
 #include <iostream>
 #include <queue>
@@ -91,7 +91,10 @@ main (int argc, char *argv[])
           Simple ();
         }
 
-
+      if (strcmp(argv[1], "Learn")==0)
+        {
+          Learn ();
+        }
 
       /* Run more complex scenarios */
       if (strcmp(argv[1], "SingleCell")==0)
