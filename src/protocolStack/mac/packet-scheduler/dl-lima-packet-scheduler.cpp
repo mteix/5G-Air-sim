@@ -19,7 +19,7 @@
  * Author: Alessandro Grassi <alessandro.grassi@poliba.it>
  */
 
-#include "dl-mt-packet-scheduler.h"
+#include "dl-lima-packet-scheduler.h"
 #include "../mac-entity.h"
 #include "../../packet/Packet.h"
 #include "../../packet/packet-burst.h"
@@ -33,20 +33,20 @@
 #include "../../../core/spectrum/bandwidth-manager.h"
 #include "../../../core/idealMessages/ideal-control-messages.h"
 
-DL_MT_PacketScheduler::DL_MT_PacketScheduler()
+DlLimaPacketScheduler::DlLimaPacketScheduler()
 {
   SetMacEntity (nullptr);
   CreateFlowsToSchedule ();
 }
 
-DL_MT_PacketScheduler::~DL_MT_PacketScheduler()
+DlLimaPacketScheduler::~DlLimaPacketScheduler()
 {
   Destroy ();
 }
 
 
 double
-DL_MT_PacketScheduler::ComputeSchedulingMetric (RadioBearer *bearer, double spectralEfficiency, int subChannel)
+DlLimaPacketScheduler::ComputeSchedulingMetric (RadioBearer *bearer, double spectralEfficiency, int subChannel)
 {
   /*
    * For the MT scheduler the metric is computed

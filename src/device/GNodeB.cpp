@@ -40,6 +40,8 @@
 #include "../protocolStack/mac/packet-scheduler/nb-roundrobin-uplink-packet-scheduler.h"
 #include "../protocolStack/mac/packet-scheduler/nb-fifo-uplink-packet-scheduler.h"
 #include "../protocolStack/mac/packet-scheduler/nb-uplink-packet-scheduler.h"
+#include "../protocolStack/mac/packet-scheduler/dl-lima-packet-scheduler.h"
+#include "../protocolStack/mac/packet-scheduler/ul-lima-packet-scheduler.h"
 #include "../phy/gnb-phy.h"
 #include "../core/spectrum/bandwidth-manager.h"
 #include "../protocolStack/packet/packet-burst.h"
@@ -466,6 +468,12 @@ GNodeB::SetDLScheduler (GNodeB::DLSchedulerType type)
       mac->SetDownlinkPacketScheduler (scheduler);
       break;
 
+      case GNodeB::DLScheduler_TYPE_LIMA:
+      scheduler = new  DlLimaPacketScheduler ();
+      scheduler->SetMacEntity (mac);
+      mac->SetDownlinkPacketScheduler (scheduler);
+      break;
+
     default:
       cout << "ERROR: invalid scheduler type" << endl;
       exit(1);
@@ -507,6 +515,11 @@ GNodeB::SetULScheduler (ULSchedulerType type)
       break;
     case GNodeB::ULScheduler_TYPE_NB_IOT_ROUNDROBIN:
       scheduler = new nbRoundRobinUplinkPacketScheduler (mac);
+      mac->SetUplinkPacketScheduler (scheduler);
+      break;
+      case GNodeB::ULScheduler_TYPE_LIMA:
+      scheduler = new UlLimaPacketScheduler ();
+      scheduler->SetMacEntity (mac);
       mac->SetUplinkPacketScheduler (scheduler);
       break;
 

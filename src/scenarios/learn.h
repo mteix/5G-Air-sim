@@ -83,8 +83,8 @@ static void Learn ()
   GNodeB* gnb = networkManager->CreateGnodeb (idGnb, cell, posX, posY, GnbTxAntennas, GnbRxAntennas, dlCh, ulCh, spectrum);
   
   //We will mess around here with some schedulers ...
-  gnb->SetDLScheduler (GNodeB::DLScheduler_TYPE_PROPORTIONAL_FAIR);
-  gnb->SetULScheduler(GNodeB::ULScheduler_TYPE_FME);
+  gnb->SetDLScheduler (GNodeB::DLScheduler_TYPE_LIMA);
+  gnb->SetULScheduler(GNodeB::ULScheduler_TYPE_LIMA);
   //Create GW
   Gateway *gw = networkManager->CreateGateway ();
 

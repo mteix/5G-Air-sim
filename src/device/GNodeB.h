@@ -103,7 +103,8 @@ public:
     DLScheduler_TYPE_EXP,
     DLScheduler_LOG_RULE,
     DLScheduler_EXP_RULE,
-    DLScheduler_TYPE_ROUND_ROBIN
+    DLScheduler_TYPE_ROUND_ROBIN,
+    DLScheduler_TYPE_LIMA
   };
   enum ULSchedulerType
   {
@@ -111,7 +112,8 @@ public:
     ULScheduler_TYPE_FME,
     ULScheduler_TYPE_ROUNDROBIN,
     ULScheduler_TYPE_NB_IOT_FIFO,
-    ULScheduler_TYPE_NB_IOT_ROUNDROBIN
+    ULScheduler_TYPE_NB_IOT_ROUNDROBIN,
+    ULScheduler_TYPE_LIMA
   };
 
   GNodeB () = default;

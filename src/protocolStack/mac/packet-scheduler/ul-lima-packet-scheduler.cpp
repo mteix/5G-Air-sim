@@ -16,10 +16,10 @@
  * You should have received a copy of the GNU General Public License
  * along with 5G-air-simulator; if not, see <http://www.gnu.org/licenses/>.
  *
- * Author: Alessandro Grassi <alessandro.grassi@poliba.it>
+ * Author: Telematics Lab <telematics-dev@poliba.it>
  */
 
-#include "dl-mt-packet-scheduler.h"
+#include "ul-lima-packet-scheduler.h"
 #include "../mac-entity.h"
 #include "../../packet/Packet.h"
 #include "../../packet/packet-burst.h"
@@ -32,32 +32,30 @@
 #include "../../../phy/phy.h"
 #include "../../../core/spectrum/bandwidth-manager.h"
 #include "../../../core/idealMessages/ideal-control-messages.h"
+#include "../../../flows/QoS/QoSParameters.h"
+#include "../../../flows/MacQueue.h"
 
-DL_MT_PacketScheduler::DL_MT_PacketScheduler()
+UlLimaPacketScheduler::UlLimaPacketScheduler()
 {
   SetMacEntity (nullptr);
-  CreateFlowsToSchedule ();
+  CreateUsersToSchedule ();
 }
 
-DL_MT_PacketScheduler::~DL_MT_PacketScheduler()
+UlLimaPacketScheduler::~UlLimaPacketScheduler()
 {
   Destroy ();
 }
 
-
 double
-DL_MT_PacketScheduler::ComputeSchedulingMetric (RadioBearer *bearer, double spectralEfficiency, int subChannel)
+UlLimaPacketScheduler::ComputeSchedulingMetric (UserToSchedule* user, int subchannel)
 {
-  /*
-   * For the MT scheduler the metric is computed
-   * as follows:
-   *
-   * metric = spectralEfficiency
-   */
+  double metric;
 
-  double metric = (spectralEfficiency * 180000.);
+  int channelCondition = user->m_channelContition.at (subchannel);
+  AMCModule* amc = user->m_userToSchedule->GetProtocolStack()->GetMacEntity()->GetAmcModule();
+  double spectralEfficiency = amc->GetSinrFromCQI (channelCondition);
 
- 
+  metric = spectralEfficiency * 180000;
+
   return metric;
 }
-
