@@ -41,6 +41,7 @@
 
 UL_EXP_PacketScheduler::UL_EXP_PacketScheduler()
 {
+  std::cout << " starting the UL EXP " << std::endl;  
   SetMacEntity(nullptr);
   CreateUsersToSchedule();
 }
@@ -49,32 +50,6 @@ UL_EXP_PacketScheduler::~UL_EXP_PacketScheduler()
 {
   Destroy();
 }
-
-
-// void UL_EXP_PacketScheduler::DoSchedule()
-// {
-//   DEBUG_LOG_START_1(SIM_ENV_SCHEDULER_DEBUG)
-//   cout << "Start UL packet scheduler for node "
-//        << GetMacEntity()->GetDevice()->GetIDNetworkNode() << endl;
-//   DEBUG_LOG_END
-
-//   //UpdateAverageTransmissionRate ();
-//   CheckForDLDropPackets();
-//   //SelectFlowsToSchedule ();
-//   ComputeAW();
-
-//   if (GetFlowsToSchedule()->size() == 0)
-//   {
-//   }
-//   else
-//   {
-//     RBsAllocation();
-//   }
-
-//   StopSchedule();
-//   ClearFlowsToSchedule();
-// }
-
 
 double
 UL_EXP_PacketScheduler::ComputeSchedulingMetric(UserToSchedule *user, int subchannel)
@@ -89,7 +64,7 @@ UL_EXP_PacketScheduler::ComputeSchedulingMetric(UserToSchedule *user, int subcha
 
   double metric;
 
-  
+  metric = 1000; //just testing 
 
   // QoSForEXP *qos = (QoSForEXP*) bearer->GetQoSParameters ();
 
@@ -104,86 +79,52 @@ UL_EXP_PacketScheduler::ComputeSchedulingMetric(UserToSchedule *user, int subcha
 
   
 
-  std::cout << " Data To Transmit : " << user->m_dataToTransmit 
-            << " / Data Transmitted:" << user->m_transmittedData << std::endl; 
+  // std::cout << " Data To Transmit : " << user->m_dataToTransmit 
+  //           << " / Data Transmitted:" << user->m_transmittedData << std::endl; 
 
 
 
-  double HOL = 0.04;
-  double alfa = -log10(0.01) / 0.04;
-  double avgAW = GetAW();
-  double AW = alfa * HOL;
+  // double HOL = 0.04;
+  // double alfa = -log10(0.01) / 0.04;
+  // double avgAW = GetAW();
+  // double AW = alfa * HOL;
 
-  //Getting spectral efficiency
+  // //Getting spectral efficiency
 
-  int channelCondition = user->m_channelContition.at(subchannel);
-  AMCModule *amc = user->m_userToSchedule->GetProtocolStack()->GetMacEntity()->GetAmcModule();
-  double spectralEfficiency = GetMacEntity()->GetAmcModule()->GetSinrFromCQI(channelCondition);
+  // int channelCondition = user->m_channelContition.at(subchannel);
+  // AMCModule *amc = user->m_userToSchedule->GetProtocolStack()->GetMacEntity()->GetAmcModule();
+  // double spectralEfficiency = GetMacEntity()->GetAmcModule()->GetSinrFromCQI(channelCondition);
 
-  if (AW < 0.000001)
-    AW = 0;
+  // if (AW < 0.000001)
+  //   AW = 0;
 
-  double AW_avgAW = AW - avgAW;
+  // double AW_avgAW = AW - avgAW;
 
-  if (AW_avgAW < 0.000001)
-    AW_avgAW = 0;
+  // if (AW_avgAW < 0.000001)
+  //   AW_avgAW = 0;
+
+  // // metric = exp(AW_avgAW /
+  // //              (1 + sqrt(GetAW()))) *
+  // //          ((spectralEfficiency * 180000.) /
+  // //           bearer->GetAverageTransmissionRate());
+
+  // //Just to debug lets assume a TX rate of 1000
 
   // metric = exp(AW_avgAW /
   //              (1 + sqrt(GetAW()))) *
-  //          ((spectralEfficiency * 180000.) /
-  //           bearer->GetAverageTransmissionRate());
-
-  //Just to debug lets assume a TX rate of 1000
-
-  metric = exp(AW_avgAW /
-               (1 + sqrt(GetAW()))) *
-           ((spectralEfficiency * 180000.)) /
-            11111;
-  std::cout << "---- Metric Exp: " << metric << "---------" << std::endl;
+  //          ((spectralEfficiency * 180000.)) /
+  //           11111;
+  
+  // std::cout << "---- Metric Exp: " << metric << "---------" << std::endl;
+  
   return metric;
 }
 
-// void UL_EXP_PacketScheduler::ComputeAW()
+
+// double
+// UL_EXP_PacketScheduler::GetAW(void) const
 // {
-//   DEBUG_LOG_START_1(SIM_ENV_SCHEDULER_DEBUG)
-//   cout << "ComputeAW" << endl;
-//   DEBUG_LOG_END
-
-//   m_aW = 0;
-//   int nbFlow = 0;
-//   for (auto flow : *GetFlowsToSchedule())
-//   {
-   
-//     RadioBearer *bearer = flow->GetBearer();
-    
-
-//     if (bearer->HasPackets())
-//     {
-//       if ((bearer->GetApplication()->GetApplicationType() == Application::APPLICATION_TYPE_TRACE_BASED) ||
-//           (bearer->GetApplication()->GetApplicationType() == Application::APPLICATION_TYPE_VOIP))
-//       {
-//         QoSForEXP *qos = (QoSForEXP *)bearer->GetQoSParameters();
-//         double aWi = -(log10(qos->GetDropProbability()) /
-//                        qos->GetMaxDelay());
-//         double HOL = bearer->GetHeadOfLinePacketDelay();
-//         aWi = aWi * HOL;
-//         m_aW += aWi;
-//         nbFlow++;
-//       }
-//     }
-//   }
-
-//   m_aW = m_aW / nbFlow;
-
-//   if (m_aW < 0.000001)
-//     m_aW = 0;
+//   return m_aW;
 // }
 
-double
-UL_EXP_PacketScheduler::GetAW(void) const
-{
-  return m_aW;
-}
 
-
-// THIS IS THE RR 

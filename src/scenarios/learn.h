@@ -84,8 +84,7 @@ static void Learn ()
   
   //We will mess around here with some schedulers ...
   gnb->SetDLScheduler (GNodeB::DLScheduler_TYPE_PROPORTIONAL_FAIR);
-  gnb->SetULScheduler(GNodeB::ULScheduler_TYPE_ROUNDROBIN);
-
+  gnb->SetULScheduler(GNodeB::ULScheduler_TYPE_FME);
   //Create GW
   Gateway *gw = networkManager->CreateGateway ();
 
@@ -106,7 +105,7 @@ static void Learn ()
   int srcPort = 0;
   int dstPort = 100;
   double startTime = 0.1; //s
-  double stopTime = 33.12;  //s
+  double stopTime = 10.12;  //s
   // Application* be = flowsManager->CreateApplication (applicationID,
   //                   gw, ue,
   //                   srcPort, dstPort, TransportProtocol::TRANSPORT_PROTOCOL_TYPE_UDP,
@@ -126,7 +125,7 @@ static void Learn ()
           CBRApplication[cbrApplication].SetApplicationID (applicationID);
           CBRApplication[cbrApplication].SetStartTime(startTime);
           CBRApplication[cbrApplication].SetStopTime(stopTime);
-          CBRApplication[cbrApplication].SetInterval (0.04);
+          CBRApplication[cbrApplication].SetInterval (0.5);
           CBRApplication[cbrApplication].SetSize (500);
 
           // create qos parameters
