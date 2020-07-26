@@ -24,6 +24,9 @@
 #include <algorithm>
 #include <memory>
 #include <armadillo>
+#include <chrono>
+#include <thread>
+#include <iostream>
 
 #include "downlink-packet-scheduler.h"
 #include "../mac-entity.h"
@@ -392,6 +395,8 @@ DownlinkPacketScheduler::RBsAllocation ()
     cout << " ---- DownlinkPacketScheduler::RBsAllocation";
     DEBUG_LOG_END
     
+    // std::this_thread::sleep_for(std::chrono::milliseconds(5000));
+
     FlowsToSchedule* flows = GetFlowsToSchedule ();
     int nbOfRBs = (int) GetMacEntity ()->GetDevice ()->GetPhy ()->GetBandwidthManager ()->GetDlSubChannels ().size ();
     

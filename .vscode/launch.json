@@ -1,0 +1,43 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "(gdb) Launch SingleCellWithI",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/5G-air-simulator",
+            "args": [
+                "SingleCellWithI",
+                "7", // nCell: the number of cells
+                "1000", // r: the cell radius (in meters)
+                "100", // nUE: number of users in the cell
+                "40", // nVoip: number of VoIP
+                "50", // nVid: number of Video
+                "20", // nBE: number of Best Effort
+                "10", // nCBR: number of CBR flows
+                "5", // sched: sched: 1-> PF, 2-> M-LWDF, 3-> EXP, 4-> FLS, 5 -> Optimize EXP Rule, 6 -> Optimized LOG Rule, 7-> MT, 8-> RR
+                "1", // frStr: 1-> FDD, 2-> TDD
+                "30", // speed: is the speed of the users (km/h)
+                "0.1", // maxD: maximum tolerable delay of the transmissions (s)
+                "128", // vidRate: 128-> 128 kbps, 242-> 242 kbps, 440-> 440 kbps
+                // "42", // seed (optional): to initialize random quantities to different and reproducible values for each simulation run
+            ],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}",
+            "environment": [],
+            "externalConsole": false,
+            "MIMode": "gdb",
+            "setupCommands": [
+                {
+                    "description": "Enable pretty-printing for gdb",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                }
+            ],
+            "preLaunchTask": "Build"
+        }
+    ]
+}
