@@ -394,8 +394,7 @@ DownlinkPacketScheduler::RBsAllocation ()
     DEBUG_LOG_START_1(SIM_ENV_SCHEDULER_DEBUG)
     cout << " ---- DownlinkPacketScheduler::RBsAllocation";
     DEBUG_LOG_END
-    
-    // std::this_thread::sleep_for(std::chrono::milliseconds(5000));
+
 
     FlowsToSchedule* flows = GetFlowsToSchedule ();
     int nbOfRBs = (int) GetMacEntity ()->GetDevice ()->GetPhy ()->GetBandwidthManager ()->GetDlSubChannels ().size ();
@@ -1116,6 +1115,54 @@ DownlinkPacketScheduler::RBsAllocation ()
     {
         GetMacEntity ()->GetDevice ()->GetPhy ()->SendIdealControlMessage (pdcchMsg);
     }
+
+    int retries = 0;
+    std::ifstream readings;
+    readings.open ("readings.csv");
+    string lastLine = "";
+    bool keepReading = true;
+    float value;
+
+    do {
+        readings.seekg(0,std::ifstream::end);
+        char ch = ' ';
+        while (ch != '\n') {
+            readings.seekg(-2,std::ifstream::cur);
+
+            if ((int)readings.tellg() <= 0) {
+                readings.seekg(0);
+                break;
+            }
+
+            readings.get(ch);
+        }
+
+        std::getline(readings,lastLine);
+
+        if (lastLine == "") {
+            keepReading = true;
+        } else {
+            int splitter = lastLine.find(",");
+
+            int ix = atoi(lastLine.substr(0, splitter).c_str());
+            value = atof(lastLine.substr(splitter+1, lastLine.size() - splitter -1).c_str());
+
+            keepReading = (ix == allocation_counter);
+        }
+
+        if (keepReading && retries < 10) {
+            cout << "WAITING FOR NEW VALUE FROM ALGORITHM. CUR RETRY:" << retries+1 << endl;
+            ++retries;
+            std::this_thread::sleep_for(std::chrono::milliseconds(5000));
+        } else if (retries == 10) {
+            keepReading = false;
+        }
+        
+    } while (keepReading);
+
+    readings.close();
+
+    current_weight = value;
 
     ++allocation_counter;
 }

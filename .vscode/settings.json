@@ -4,6 +4,10 @@
         "unordered_map": "cpp",
         "hashtable": "cpp",
         "ostream": "cpp",
-        "iomanip": "cpp"
+        "iomanip": "cpp",
+        "fstream": "cpp",
+        "*.tcc": "cpp",
+        "functional": "cpp",
+        "chrono": "cpp"
     }
 }

@@ -120,7 +120,7 @@ DEBUG_LOG_END
   //    (bearer->GetApplication ()->GetApplicationType () == Application::APPLICATION_TYPE_CBR)
       )
     {
-      metric = (spectralEfficiency * 180000.)
+      metric = (spectralEfficiency * current_weight)
                /
                bearer->GetAverageTransmissionRate();
 
@@ -157,7 +157,7 @@ DEBUG_LOG_END
       //COMPUTE METRIC USING EXP RULE:
       double numerator = (6/targetDelay) * HOL;
       double denominator = (1 + sqrt (m_avgHOLDelayes));
-      double weight = (spectralEfficiency * 180000.)
+      double weight = (spectralEfficiency * current_weight)
                       /
                       bearer->GetAverageTransmissionRate();
 
