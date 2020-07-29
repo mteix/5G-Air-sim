@@ -128,8 +128,9 @@ DEBUG_LOG_START_1(SIM_ENV_SCHEDULER_DEBUG)
       cout << "\t\t non real time flow: metric = " << metric << endl;
 DEBUG_LOG_END
       if (metric == metric) {
-        // subchannel;applicationType;HeadOfLinePacketDelay;HeadOfLinePacketDelayIsNull;targetDelay;targetDelayIsNull;avgHeadOfLineDelay;spectralEfficiency;avgTransmissionRate;numerator;numeratorIsNull;denominator;denominatorIsNull;weight;weightIsNull;metric
+        // subchannel;allocation_counter;applicationType;HeadOfLinePacketDelay;HeadOfLinePacketDelayIsNull;targetDelay;targetDelayIsNull;avgHeadOfLineDelay;spectralEfficiency;avgTransmissionRate;numerator;numeratorIsNull;denominator;denominatorIsNull;weight;weightIsNull;metric
         results << std::fixed << subChannel << ";";
+        results << std::fixed << allocation_counter << ";";
         results << std::fixed << bearer->GetApplication ()->GetApplicationType () << ";";
         results << 0 << ";";
         results << 1 << ";";
@@ -176,8 +177,9 @@ DEBUG_LOG_START_1(SIM_ENV_SCHEDULER_DEBUG)
 DEBUG_LOG_END
 
       if (metric == metric) {
-        // subchannel;applicationType;HeadOfLinePacketDelay;HeadOfLinePacketDelayIsNull;targetDelay;targetDelayIsNull;avgHeadOfLineDelay;spectralEfficiency;avgTransmissionRate;numerator;numeratorIsNull;denominator;denominatorIsNull;weight;weightIsNull;metric
+        // subchannel;allocation_counter;applicationType;HeadOfLinePacketDelay;HeadOfLinePacketDelayIsNull;targetDelay;targetDelayIsNull;avgHeadOfLineDelay;spectralEfficiency;avgTransmissionRate;numerator;numeratorIsNull;denominator;denominatorIsNull;weight;weightIsNull;metric
         results << std::fixed << subChannel << ";";
+        results << std::fixed << allocation_counter << ";";
         results << std::fixed << bearer->GetApplication ()->GetApplicationType () << ";";
         results << std::fixed << HOL << ";";
         results << 0 << ";";

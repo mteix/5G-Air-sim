@@ -1116,6 +1116,8 @@ DownlinkPacketScheduler::RBsAllocation ()
     {
         GetMacEntity ()->GetDevice ()->GetPhy ()->SendIdealControlMessage (pdcchMsg);
     }
+
+    ++allocation_counter;
 }
 
 
