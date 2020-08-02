@@ -1140,21 +1140,21 @@ DownlinkPacketScheduler::RBsAllocation ()
         std::getline(readings,lastLine);
 
         if (lastLine == "") {
-            keepReading = true;
+            keepReading = false;
         } else {
             int splitter = lastLine.find(",");
 
             int ix = atoi(lastLine.substr(0, splitter).c_str());
             value = atof(lastLine.substr(splitter+1, lastLine.size() - splitter -1).c_str());
 
-            keepReading = (ix == allocation_counter);
+            keepReading = (ix < allocation_counter);
         }
 
-        if (keepReading && retries < 10) {
+        if (keepReading && retries < 5000) {
             cout << "WAITING FOR NEW VALUE FROM ALGORITHM. CUR RETRY:" << retries+1 << endl;
             ++retries;
-            std::this_thread::sleep_for(std::chrono::milliseconds(5000));
-        } else if (retries == 10) {
+            std::this_thread::sleep_for(std::chrono::milliseconds(10));
+        } else if (retries == 5000) {
             keepReading = false;
         }
         
@@ -1164,7 +1164,10 @@ DownlinkPacketScheduler::RBsAllocation ()
 
     current_weight = value;
 
-    ++allocation_counter;
+    if (increase_allocation_counter) {
+        ++allocation_counter;
+        increase_allocation_counter = false;
+    }
 }
 
 

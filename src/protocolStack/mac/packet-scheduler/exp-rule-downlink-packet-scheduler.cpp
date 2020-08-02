@@ -146,6 +146,8 @@ DEBUG_LOG_END
         results << 0 << ";";
         results << 1 << ";";
         results << std::fixed << metric << endl;
+
+        increase_allocation_counter = true;
       }
     }
   else
@@ -195,6 +197,8 @@ DEBUG_LOG_END
         results << std::fixed << weight << ";";
         results << 0 << ";";
         results << std::fixed << metric << endl;
+        
+        increase_allocation_counter = true;
       }
     }
 
