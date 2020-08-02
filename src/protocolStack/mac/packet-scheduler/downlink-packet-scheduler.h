@@ -36,6 +36,10 @@ public:
   virtual void DoSchedule (void);
   virtual void DoStopSchedule (void);
 
+  int allocation_counter = 0;
+  bool increase_allocation_counter = false;
+  float current_weight = 180000.;
+
   virtual void RBsAllocation ();
   virtual double ComputeSchedulingMetric (RadioBearer *bearer, double spectralEfficiency, int subChannel) = 0;
 

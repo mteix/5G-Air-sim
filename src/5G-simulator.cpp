@@ -88,6 +88,12 @@ main (int argc, char *argv[])
           return 0;
         }
 
+      std::ofstream results;
+      results.open("results.csv", std::ofstream::out | std::ofstream::trunc);
+      results.close();
+      // results.open("readings.csv", std::ofstream::out | std::ofstream::trunc);
+      // results.close();
+
       /* Run simple scenario */
       if (strcmp(argv[1], "Simple")==0)
         {

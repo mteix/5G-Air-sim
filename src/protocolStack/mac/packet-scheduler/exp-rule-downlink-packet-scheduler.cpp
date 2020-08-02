@@ -35,6 +35,9 @@
 #include "../../../flows/QoS/QoSParameters.h"
 #include "../../../flows/MacQueue.h"
 
+#include <iostream>
+#include <fstream>
+
 ExpRuleDownlinkPacketScheduler::ExpRuleDownlinkPacketScheduler()
 {
   SetMacEntity (nullptr);
@@ -102,6 +105,9 @@ ExpRuleDownlinkPacketScheduler::ComputeAverageOfHOLDelays (void)
 double
 ExpRuleDownlinkPacketScheduler::ComputeSchedulingMetric (RadioBearer *bearer, double spectralEfficiency, int subChannel)
 {
+  std::ofstream results;
+  results.open ("results.csv", std::ofstream::app);
+
 DEBUG_LOG_START_1(SIM_ENV_SCHEDULER_DEBUG)
   cout << "\t ComputeSchedulingMetric for flow "
             << bearer->GetApplication ()->GetApplicationID () << endl;
@@ -114,14 +120,35 @@ DEBUG_LOG_END
   //    (bearer->GetApplication ()->GetApplicationType () == Application::APPLICATION_TYPE_CBR)
       )
     {
-      metric = (spectralEfficiency * 180000.)
+      metric = (spectralEfficiency * current_weight)
                /
                bearer->GetAverageTransmissionRate();
 
 DEBUG_LOG_START_1(SIM_ENV_SCHEDULER_DEBUG)
       cout << "\t\t non real time flow: metric = " << metric << endl;
 DEBUG_LOG_END
+      if (metric == metric) {
+        // subchannel;allocation_counter;applicationType;HeadOfLinePacketDelay;HeadOfLinePacketDelayIsNull;targetDelay;targetDelayIsNull;avgHeadOfLineDelay;spectralEfficiency;avgTransmissionRate;numerator;numeratorIsNull;denominator;denominatorIsNull;weight;weightIsNull;metric
+        results << std::fixed << subChannel << ";";
+        results << std::fixed << allocation_counter << ";";
+        results << std::fixed << bearer->GetApplication ()->GetApplicationType () << ";";
+        results << 0 << ";";
+        results << 1 << ";";
+        results << 0 << ";";
+        results << 1 << ";";
+        results << std::fixed << m_avgHOLDelayes << ";";
+        results << std::fixed << spectralEfficiency << ";";
+        results << std::fixed << bearer->GetAverageTransmissionRate() << ";";
+        results << 0 << ";";
+        results << 1 << ";";
+        results << 0 << ";";
+        results << 1 << ";";
+        results << 0 << ";";
+        results << 1 << ";";
+        results << std::fixed << metric << endl;
 
+        increase_allocation_counter = true;
+      }
     }
   else
     {
@@ -132,7 +159,7 @@ DEBUG_LOG_END
       //COMPUTE METRIC USING EXP RULE:
       double numerator = (6/targetDelay) * HOL;
       double denominator = (1 + sqrt (m_avgHOLDelayes));
-      double weight = (spectralEfficiency * 180000.)
+      double weight = (spectralEfficiency * current_weight)
                       /
                       bearer->GetAverageTransmissionRate();
 
@@ -150,7 +177,32 @@ DEBUG_LOG_START_1(SIM_ENV_SCHEDULER_DEBUG)
                 "\n\t\t\t weight = " << weight <<
                 "\n\t\t --> metric = " << metric << endl;
 DEBUG_LOG_END
+
+      if (metric == metric) {
+        // subchannel;allocation_counter;applicationType;HeadOfLinePacketDelay;HeadOfLinePacketDelayIsNull;targetDelay;targetDelayIsNull;avgHeadOfLineDelay;spectralEfficiency;avgTransmissionRate;numerator;numeratorIsNull;denominator;denominatorIsNull;weight;weightIsNull;metric
+        results << std::fixed << subChannel << ";";
+        results << std::fixed << allocation_counter << ";";
+        results << std::fixed << bearer->GetApplication ()->GetApplicationType () << ";";
+        results << std::fixed << HOL << ";";
+        results << 0 << ";";
+        results << std::fixed << targetDelay << ";";
+        results << 0 << ";";
+        results << std::fixed << m_avgHOLDelayes << ";";
+        results << std::fixed << spectralEfficiency << ";";
+        results << std::fixed << bearer->GetAverageTransmissionRate() << ";";
+        results << std::fixed << numerator << ";";
+        results << 0 << ";";
+        results << std::fixed << denominator << ";";
+        results << 0 << ";";
+        results << std::fixed << weight << ";";
+        results << 0 << ";";
+        results << std::fixed << metric << endl;
+        
+        increase_allocation_counter = true;
+      }
     }
+
+    results.close();
 
   return metric;
 }
